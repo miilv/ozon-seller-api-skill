@@ -1,115 +1,52 @@
 ---
 name: ozon-seller-api
-description: Ozon Seller API reference and helper. Use when working with Ozon marketplace API, building integrations with Ozon, managing products/orders/warehouses/finances via the Ozon Seller API, or when the user mentions Ozon API.
+description: Ozon Seller API reference and helper. Use when working with Ozon marketplace API integrations, endpoints, request or response schemas, Client-Id/Api-Key auth, OAuth, products, prices, stocks, warehouses, FBO/FBS/rFBS/FBP postings, returns, finance, analytics, reports, reviews, questions, chats, push notifications, offer_id, product_id, sku, or warehouse_id.
 ---
 
 # Ozon Seller API
 
-You have access to the complete Ozon Seller API documentation (380 endpoints). Use it to help the user build integrations, write API calls, debug issues, and understand the Ozon marketplace API.
+Use this skill for targeted Ozon Seller API lookups and integration help. Treat `swagger.json` as the only API documentation source of truth.
 
-## Quick Reference
+## Protocol Details
 
-- **Base URL:** `https://api-seller.ozon.ru`
-- **Protocol:** All endpoints use **POST** with JSON request/response bodies
-- **Auth headers** (required on every request):
-  - `Client-Id` — seller's client ID (number)
-  - `Api-Key` — API key string
-- **Content-Type:** `application/json`
-- **Docs:** https://docs.ozon.ru/api/seller/en/
+Do not rely on static protocol notes in this skill body. Use Swagger-derived helper output instead:
 
-## Authentication
+- Endpoint method, media type, auth headers, and parameters: `node scripts/lookup-operation.js --operation-id <id> --details`
+- API key auth: `node scripts/lookup-operation.js --doc-tag Auth`
+- OAuth: `node scripts/lookup-operation.js --doc-tag OAuth-token`
+- Environment/base host: `node scripts/lookup-operation.js --doc-tag Environment`
 
-Two auth methods:
-1. **API Key** — generated in seller's personal account at Settings > Seller API. Pass as `Client-Id` + `Api-Key` headers.
-2. **OAuth Token** — for private apps. Create an app at https://seller.ozon.ru/app/settings/api-keys, get a token via OAuth flow. Pass as `Authorization: Bearer <token>` header (no `Client-Id` needed).
+## Lookup Workflow
 
-## Example Request
+1. For a bird's-eye view, start with the Swagger-backed map. It uses `x-tagGroups` and tag metadata from `swagger.json`:
+   `node scripts/lookup-operation.js --map`
+2. For targeted search, query the read-only helper:
+   `node scripts/lookup-operation.js --query "product list" --limit 5`
+3. For a known endpoint, path, or operation ID:
+   `node scripts/lookup-operation.js --operation-id ProductAPI_GetProductList --details`
+   `node scripts/lookup-operation.js --path /v3/product/list --details`
+4. For lower-level navigation, list raw tags or operations in one tag:
+   `node scripts/lookup-operation.js --tags`
+   `node scripts/lookup-operation.js --tag ProductAPI --limit 20`
+5. For compact non-operation docs such as auth, OAuth, errors, push notifications, or news:
+   `node scripts/lookup-operation.js --doc-tags`
+   `node scripts/lookup-operation.js --doc-tag Auth --grep token --limit 20`
+6. Add `--schemas` only when request or response fields are needed:
+   `node scripts/lookup-operation.js --operation-id ProductAPI_GetProductList --details --schemas`
+7. Run validation after changing `swagger.json` or the helper:
+   `node scripts/lookup-operation.js --validate`
+8. Do not open the full `swagger.json` unless the user explicitly asks for broad source material. Use the lookup script for compact output.
 
-```bash
-curl -X POST https://api-seller.ozon.ru/v2/product/list \
-  -H "Client-Id: 123456" \
-  -H "Api-Key: your-api-key" \
-  -H "Content-Type: application/json" \
-  -d '{"filter": {}, "limit": 10}'
-```
+## Files
 
-## API Structure (Tag Groups)
+- `swagger.json`: complete OpenAPI source and the only API source of truth.
+- `scripts/lookup-operation.js`: local read-only helper for Swagger-derived API maps, endpoint lookup, doc tag lookup, parameter/schema lookup, and validation. It is not a user-facing Ozon API client.
 
-### Description (Guides)
-Introduction, Getting Started, Auth, OAuth, Environment, Process
+## Answering Rules
 
-### Basic Methods
-- **APIkey** — get roles/permissions for current API key
-- **SellerInfo** — seller account info
-- **CategoryAPI** — product categories tree, attributes, attribute values
-- **ProductAPI** — create/update/delete/archive products, get product info, images, ratings
-- **BarcodeAPI** — add/generate barcodes
-- **Prices&StocksAPI** — update prices, stocks, discounts, get stock info
-- **Promos** — Ozon promotions: list, activate/deactivate products
-- **PricingStrategyAPI** — pricing strategies: create, update, delete, add/remove items
-- **BrandAPI** — brand certification
-- **CertificationAPI** — quality certificates: create, bind, delete
-- **WarehouseAPI** — warehouse list, delivery methods
-- **FBSWarehouseSetup** — create/update/archive FBS warehouses
-- **FBS** — FBS postings: list, get, ship, cancel, labels, acts
-- **PolygonAPI** — delivery polygons for rFBS
-- **FBO** — FBO postings: list, get; supply orders
-- **FboSupplyRequest** — FBO supply drafts and orders
-- **FBS&rFBSMarks** — product exemplar codes (Chestny ZNAK)
-- **DeliveryFBS** — FBS carriages: create, approve, cancel, labels, acts
-- **DeliveryrFBS** — rFBS delivery: cutoff, timeslot, tracking, status
-- **Pass** — warehouse passes: create, update, delete, list
-- **ReturnsAPI** — FBO returns and utilization
-- **ReturnAPI** — return shipments by barcode
-- **RFBSReturnsAPI** — rFBS return requests: list, approve, reject, compensate
-- **CancellationAPI** — conditional cancellation requests
-- **ChatAPI** — customer chats: list, send messages/files, history
-- **SupplierAPI** — invoices: create, upload, get, delete
-- **ReportAPI** — generate reports: products, postings, stocks, returns, discounted
-- **AnalyticsAPI** — analytics data, stock on warehouses, delivery time
-- **FinanceAPI** — finance transactions, cash flow, realization reports
-- **Receipt** — receipts for Ozon Global
-- **SellerRating** — seller rating summary and history
-- **Digital** — digital products: upload codes, stock import
-
-### Beta Methods
-- **Quants** — quant info
-- **ReviewAPI** — product reviews: list, comment, change status
-- **Questions&Answers** — customer Q&A: list, answer, manage
-- **SellerActions** — seller promotions: create discounts/vouchers/installments
-- **FBP** — Fulfillment by Partner: drafts, orders, labels, acts
-
-### Premium Methods
-Extended chat, analytics, and finance methods (require Premium access)
-
-### Ozon Delivery
-Order management for Ozon Delivery: delivery check, map, checkout, orders, cancellations
-
-### Push Notifications
-Webhook setup for real-time notifications: new postings, cancellations, status changes, stock updates, chat messages. Includes the **Notification API** for managing webhook URLs (set, update, enable/disable, list, check, delete) and listing supported push types.
-
-## Documentation Files
-
-For the **complete endpoint index** with all 380 endpoints, see:
-- [endpoints-index.md](endpoints-index.md) — quick lookup table of all endpoints
-
-For **detailed endpoint documentation** (request/response schemas, descriptions), see:
-- [reference/description.md](reference/description.md) — guides: intro, auth, environment, process
-- [reference/basic_methods.md](reference/basic_methods.md) — all basic method endpoints (products, orders, warehouses, finance, etc.)
-- [reference/beta_methods.md](reference/beta_methods.md) — beta endpoints (reviews, Q&A, seller actions, FBP)
-- [reference/premium_methods.md](reference/premium_methods.md) — premium method endpoints
-- [reference/ozon_delivery.md](reference/ozon_delivery.md) — Ozon Delivery endpoints
-- [reference/errors.md](reference/errors.md) — error codes and handling
-- [reference/push_notifications.md](reference/push_notifications.md) — push notification setup and Notification API
-
-For the **full OpenAPI spec** (Swagger 3.0), see:
-- [swagger.json](swagger.json) — complete machine-readable spec with all schemas
-
-## How to Use This Skill
-
-1. When the user asks about a specific endpoint, look it up in `endpoints-index.md` first
-2. For request/response details, read the relevant `reference/*.md` file
-3. For complex schema questions, consult `swagger.json` directly
-4. Always include `Client-Id` and `Api-Key` headers in code examples
-5. All Ozon Seller API endpoints use POST method
-6. Generate working code examples in the user's preferred language
+- Use the exact method and path from the lookup result.
+- Include auth headers in examples, using placeholders only. Prefer parameter details from `--details`.
+- If an endpoint is beta, premium, or Ozon Delivery specific, say so.
+- Prefer the user's requested language or stack for code examples.
+- For direct API examples, include the JSON body shape and a minimal success-path request.
+- Do not invent or rely on a bundled Ozon CLI. Generate small app-specific wrappers when the user asks for executable code.
