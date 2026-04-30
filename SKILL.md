@@ -18,6 +18,8 @@ Do not rely on static protocol notes in this skill body. Use Swagger-derived hel
 
 ## Lookup Workflow
 
+Run helper commands from this skill directory, or use an absolute path to `scripts/lookup-operation.js`. In Claude Code, `${CLAUDE_SKILL_DIR}` points at this skill directory.
+
 1. For a bird's-eye view, start with the Swagger-backed map. It uses `x-tagGroups` and tag metadata from `swagger.json`:
    `node scripts/lookup-operation.js --map`
 2. For targeted search, query the read-only helper:

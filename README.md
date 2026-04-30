@@ -1,26 +1,42 @@
-# Ozon Seller API — Codex Skill
+# Ozon Seller API — Agent Skill
 
-A Codex skill for working with the **Ozon Seller API**. The repository intentionally keeps `swagger.json` as the only API documentation source of truth, then uses a small lookup helper to avoid loading the full spec into context for every question.
+An [Agent Skills](https://agentskills.io) package for working with the **Ozon Seller API** in compatible coding agents such as Claude Code, Codex, and other tools that load `SKILL.md`.
+
+The repository intentionally keeps `swagger.json` as the only API documentation source of truth, then uses a small lookup helper to avoid loading the full spec into context for every question.
 
 ## Installation
 
-Clone into your user skills directory:
+Clone this repository into the skills directory used by your agent.
+
+Claude Code personal skill:
+
+```bash
+git clone https://github.com/miilg/ozon-seller-api-skill.git ~/.claude/skills/ozon-seller-api
+```
+
+Claude Code project skill:
+
+```bash
+git clone https://github.com/miilg/ozon-seller-api-skill.git .claude/skills/ozon-seller-api
+```
+
+Codex user skill:
 
 ```bash
 git clone https://github.com/miilg/ozon-seller-api-skill.git "${CODEX_HOME:-$HOME/.codex}/skills/ozon-seller-api"
 ```
 
-Or into a repository-scoped skills directory:
+Codex repository-scoped skill:
 
 ```bash
 git clone https://github.com/miilg/ozon-seller-api-skill.git .agents/skills/ozon-seller-api
 ```
 
-Restart Codex after installing.
+Restart or refresh your agent if it does not detect the new skill automatically.
 
 ## Usage
 
-Codex activates the skill automatically when you mention Ozon API, Ozon marketplace integrations, seller API endpoints, products, stocks, warehouses, postings, finance, analytics, reports, reviews, chats, or push notifications.
+Agents can activate the skill automatically when you mention Ozon API, Ozon marketplace integrations, seller API endpoints, products, stocks, warehouses, postings, finance, analytics, reports, reviews, chats, or push notifications. You can also invoke it directly in agents that expose skills as slash commands, for example `/ozon-seller-api`.
 
 Example prompts:
 
@@ -53,6 +69,8 @@ node scripts/lookup-operation.js --query "product list" --limit 5
 node scripts/lookup-operation.js --operation-id ProductAPI_GetProductList --details --schemas
 node scripts/lookup-operation.js --path /v3/product/list --method post --details
 ```
+
+Run these commands from the skill directory, or pass the bundled script by absolute path. In Claude Code skills, `${CLAUDE_SKILL_DIR}` points at this directory, so `node "${CLAUDE_SKILL_DIR}/scripts/lookup-operation.js" --map` works from any project.
 
 It is not an Ozon API client and does not make network calls.
 
