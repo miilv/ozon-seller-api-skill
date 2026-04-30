@@ -339,14 +339,12 @@ Requests in statuses `NEW` or `SEEN` you can:
   - [/v1/seller-actions/create/discount-with-condition](#operation/SellerActionsCreateDiscountWithCondition): with the "Discount of order amount" mechanics;
   - [/v1/seller-actions/create/installment](#operation/SellerActionsCreateInstallment): with the "Interest-free installment" mechanics;
   - [/v1/seller-actions/create/multi-level-discount](#operation/SellerActionsCreateMultiLevelDiscount): with the "Multi-level discount from the amount" mechanics;
-  - [/v1/seller-actions/create/ozon-card-discount](#operation/SellerActionsCreateOzonCardDiscount): with the "Increased discount with Ozon Bank card" mechanics;
   - [/v1/seller-actions/create/voucher](#operation/SellerActionsCreateVoucher): with the "Discount by promo code" mechanics.
 - Edit the special offer:
   - [/v1/seller-actions/update/discount](#operation/SellerActionsUpdateDiscount): with the "Discount" mechanics;
   - [/v1/seller-actions/update/discount-with-condition](#operation/SellerActionsUpdateDiscountWithCondition): with the "Discount of order amount" mechanics;
   - [/v1/seller-actions/update/installment](#operation/SellerActionsUpdateInstallment): with the "Interest-free installment" mechanics;
   - [/v1/seller-actions/update/multi-level-discount](#operation/SellerActionsUpdateMultiLevelDiscount): with the "Multi-level discount from the amount" mechanics;
-  - [/v1/seller-actions/update/ozon-card-discount](#operation/SellerActionsUpdateOzonCardDiscount): with the "Increased discount with Ozon Bank card" mechanics;
   - [/v1/seller-actions/update/voucher](#operation/SellerActionsUpdateVoucher): with the "Discount by promo code" mechanics.
 - [/v1/seller-actions/list](#operation/SellerActionsList): get a list of created special offers.
 - [/v1/seller-actions/products/candidates](#operation/SellerActionsProductsCandidates): get a list of products that can participate in the special offer.
@@ -430,7 +428,7 @@ Manage orders depending on your work scheme:
 - [FBO scheme](#section/Managing-FBO-FBS-and-rFBS-orders/FBO-scheme);
 - [FBS Standard scheme](#section/Managing-FBO-FBS-and-rFBS-orders/FBS-Standard-scheme);
 - [FBS PickUp scheme with trusted acceptance enabled](#section/Managing-FBO-FBS-and-rFBS-orders/FBS-PickUp-scheme-with-trusted-acceptance-enabled);
-- [Ozon Logistics](#section/Managing-FBO-FBS-and-rFBS-orders/Ozon-Logistics);
+- [Ozon Delivery](#section/Managing-FBO-FBS-rFBS-and-FBP-orders/Ozon-Delivery);
 - [rFBS Standard scheme](#section/Managing-FBO-FBS-and-rFBS-orders/rFBS-Standard-scheme);
 - [rFBS Express scheme with delivery to a pick-up point](#section/Managing-FBO-FBS-and-rFBS-orders/rFBS-Express-scheme-with-delivery-to-a-pick-up-point);
 - [rFBS scheme with delivery by the integrated service](#section/Managing-FBO-FBS-and-rFBS-orders/rFBS-scheme-with-delivery-by-integrated-service).
@@ -692,11 +690,11 @@ To track the status change once the shipment is found, use the [/v3/posting/fbs/
 To handle dispute orders over to shipping, use the [/v2/posting/fbs/awaiting-delivery](#operation/PostingAPI_MoveFbsPostingToAwaitingDelivery) method.
 The shipment status will change to `awaiting_deliver`.
 
-## Ozon Logistics
+## Ozon Delivery
 
 ### Delivery
 
-1. Check if the customer can receive orders via Ozon: [v1/delivery/check](#operation/DeliveryCheck). Delivery methods for Ozon Logistics:
+1. Check if the customer can receive orders via Ozon: [v1/delivery/check](#operation/DeliveryCheck). Delivery methods for Ozon Delivery:
    - Pick-up if the customer receives products at a pick-up point.
    - Courier delivery if Ozon delivers the products to the specified address.
 
@@ -717,7 +715,7 @@ Create an order in the Ozon system only after the customer pays for it.
 
 1. Create an order and start packing it: [v2/order/create](#operation/OrderAPI_OrderCreate). You can't change the order after calling the method.
 2. Track all shipments or a specific one: [v2/posting/fbo/list](#operation/PostingAPI_GetFboPostingList) and [v3/posting/fbs/list](#operation/PostingAPI_GetFbsPostingListV3).
-3. Get the item labels from the shipment: [v1/posting/marks](#operation/PostingAPI_PostingMarks). Pass only those shipments that you created using Ozon Logistics methods.
+3. Get the item labels from the shipment: [v1/posting/marks](#operation/PostingAPI_PostingMarks). Pass only those shipments that you created using Ozon Delivery methods.
 
 ### Shipment tracking
 
@@ -734,7 +732,7 @@ If the customer rejects one of the products upon receipt of the shipment, it rem
 
 ### Order or shipment cancellation
 
-You can cancel orders that were created using the Ozon Logistics methods if:
+You can cancel orders that were created using the Ozon Delivery methods if:
 - Ozon canceled the order before it arrived at the pick-up point or before delivery to the customer.
 - The customer refused the whole order or its part upon receipt.
 - The customer requested order cancellation through the seller's website or app. The customer can't cancel the order via Ozon account.
@@ -770,7 +768,7 @@ To get information about it, use the [v1/returns/list](#operation/returnsList) m
 - Get a report on the stock in Ozon warehouses to plan the product supply: [v1/analytics/stocks](#operation/AnalyticsAPI_AnalyticsStocks).
 - Show customers the quantity of products in Ozon warehouses: [v4/product/info/stocks](#operation/ProductAPI_GetProductInfoStocks).
 
-If there aren't enough products in Ozon warehouses, you can't create an order using the Ozon Logistics methods.
+If there aren't enough products in Ozon warehouses, you can't create an order using the Ozon Delivery methods.
 
 ## rFBS Standard scheme
 

@@ -515,6 +515,134 @@ You can leave feedback on this method in the comments section to the [discussion
 
 ---
 
+### `POST /v1/product/visibility/set`
+
+**Set product visibility on Ozon and Ozon Select storefronts**
+
+Operation ID: `ProductVisibilitySet`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1951-Novyi-metod-upravleniia-vidimostiu-na-vitrinakh/) in the Ozon for dev community.
+
+**Request body:**
+
+- `item_placement` (array[object]) **(required)** — Product visibility details.
+  - `placement` (enum) **(required)** — Values: `OZON, SELECT, OZON_SELECT`
+  - `sku` (integer(int64)) **(required)** — Product identifier in the Ozon system, SKU.
+
+**Response 200:**
+
+- `items` (array[object]) — Product visibility details.
+  - `select_permission` (enum) — Values: `UNSPECIFIED, RESTRICTED, ALLOWED`
+  - `seller_item_placement` (enum) — Values: `UNSPECIFIED, OZON, SELECT, OZON_SELECT`
+  - `seller_item_placement_list` (array[object]) — List of visibility set by the seller:   - `UNSPECIFIED`: undefined;   - `OZON`: only on Ozon;   - `SELECT`: only on the Select.
+  - `showcases_visibility` (enum) — Values: `UNSPECIFIED, OZON, SELECT, OZON_SELECT, NONE`
+  - `showcases_visibility_list` (array[object]) — List of storefronts where the product is displayed:   - `UNSPECIFIED`: undefined;   - `OZON`: only on Ozon;   - `SELECT`: only on the Select.
+  - `sku` (integer(int64)) — Product identifier in the Ozon system, SKU.
+  - `warnings` (array[string]) — Warnings.
+- `items_errors` (array[object]) — Products with errors.
+  - `code` (string) — Error code.
+  - `sku` (integer(int64)) — Product identifier in the Ozon system, SKU.
+
+**Response default:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v2/posting/digital/list`
+
+**Get shipment list**
+
+Operation ID: `PostingDigitalList`
+
+Returns a list of shipments for which digital product codes need to be uploaded. Method is available only to sellers working with digital products. 
+
+To get a list of shipments in any status, use the [/v3/posting/fbo/list](#operation/PostingFboList) method.
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/2050-Novyi-beta-metod-dlia-postingov-s-zagruzkoi-kodov-tsifrovykh-tovarov-v-Seller-API/) in the Ozon for dev community.
+
+**Request body:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `filter` (object)
+  - `order_numbers` (array[string]) — Order numbers to which the shipments belong.
+  - `posting_numbers` (array[string]) — Shipment identifiers.
+  - `since` (string(date-time)) — Start date.
+  - `to` (string(date-time)) — End date.
+- `limit` (integer(int64)) — Number of values in the response.
+- `sort_dir` (enum) — Values: `ASC, DESC`
+- `with` (object)
+  - `analytics_data` (boolean) — `true` to add analytics data.
+  - `financial_data` (boolean) — `true` to add financial data.
+  - `legal_info` (boolean) — `true` to add legal information.
+
+**Response 200:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `has_next` (boolean) — `true` if the response doesn't contain all shipments.
+- `postings` (array[object]) — Shipment list.
+  - `additional_data` (array[object]) — Additional parameters.
+  - `analytics_data` (object)
+  - `cancel_reason_id` (integer(int64)) — Identifier of shipment cancellation reason.
+  - `cancellation` (object)
+  - `created_at` (string(date-time)) — Date and time of shipment creation.
+  - `external_order` (object)
+  - `financial_data` (object)
+  - `in_process_at` (string(date-time)) — Start date and time of shipment processing.
+  - `legal_info` (object)
+  - `order_id` (integer(int64)) — Order identifier to which the shipment belongs.
+  - `order_number` (string) — Order number to which the shipment belongs.
+  - `posting_number` (string) — Shipment number.
+  - `products` (array[object]) — List of products in the shipment.
+  - `status` (string) — Shipment status:  - `awaiting_packaging`: awaiting packaging.
+  - `waiting_deadline_for_digital_code` (string(date-time)) — Deadline for providing digital product codes. Upload codes using the [/v1/posting/digital/codes/upload](#operation/UploadPostingCodes) method.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
 ## Quants
 
 ### `POST /v1/product/quant/list`
@@ -1013,11 +1141,14 @@ You can leave feedback on this method in the comments section to the [discussion
   - `date_to` (string(date-time)) — End date.
   - `status` (string) — Question status: - `NEW`, - `ALL`: all questions, - `VIEWED`, - `PROCESSED`, - `UNPROCESSED`.
 - `last_id` (string) — Identifier of the last value on the page.   Leave blank for the first request. For the next values, specify the `last_id` from the response of the pre
+- `limit` (integer(int64)) — Number of values in the response.
+- `sort_dir` (enum) — Values: `DESC, ASC`
 
 **Response 200:**
 
 - `questions` (object) — Questions.
 - `last_id` (string) — Identifier of the last value on the page.  To get the next values, specify the received value in the next request in the `last_id` parameter.
+- `has_next` (boolean) — `true` if not all questions are returned in the response.
 
 **Response default:**
 
@@ -1171,35 +1302,6 @@ You can leave feedback on this method in the comments section to the [discussion
 - `discount_type` (enum) **(required)** — Values: `PERCENT, CURRENCY`
 - `is_legal_entities_segment` (boolean) — `true`, if the special offer is for legal entities only.
 - `title` (string) — Special offer name.
-
-**Response 200:**
-
-- `action_id` (integer(uint64)) — Special offer identifier.
-
-**Response default:**
-
-- `code` (integer(int32)) — Error code.
-- `details` (array[object]) — Error details.
-  - `typeUrl` (string) — URL type.
-  - `value` (string(byte)) — Error value.
-- `message` (string) — Error description.
-
----
-
-### `POST /v1/seller-actions/create/ozon-card-discount`
-
-**Create special offer with "Increased discount with Ozon Bank card" mechanics**
-
-Operation ID: `SellerActionsCreateOzonCardDiscount`
-
-You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1872-Novye-metody-dlia-raboty-s-aktsiiami-sellera) in the Ozon for dev community.
-
-**Request body:**
-
-- `date_end` (string(date-time)) **(required)** — Date and time when the special offer ends.
-- `date_start` (string(date-time)) **(required)** — Date and time when the special offer starts.
-- `discount_value` (number(double)) **(required)** — Discount size.
-- `title` (string) **(required)** — Special offer name.
 
 **Response 200:**
 
@@ -1451,65 +1553,6 @@ You can leave feedback on this method in the comments section to the [discussion
     - `discount_value` (number(double)) **(required)** — Discount amount.
     - `order_amount` (number(double)) **(required)** — Minimum order amount for the discount.
   - `is_legal_entities_segment` (boolean) — `true` if the special offer is only for legal entities.
-  - `title` (string) **(required)** — Special offer name.
-
-**Response 400:**
-
-- `code` (integer(int32)) — Error code.
-- `details` (array[object]) — Error details.
-  - `typeUrl` (string) — URL type.
-  - `value` (string(byte)) — Error value.
-- `message` (string) — Error description.
-
-**Response 403:**
-
-- `code` (integer(int32)) — Error code.
-- `details` (array[object]) — Error details.
-  - `typeUrl` (string) — URL type.
-  - `value` (string(byte)) — Error value.
-- `message` (string) — Error description.
-
-**Response 404:**
-
-- `code` (integer(int32)) — Error code.
-- `details` (array[object]) — Error details.
-  - `typeUrl` (string) — URL type.
-  - `value` (string(byte)) — Error value.
-- `message` (string) — Error description.
-
-**Response 409:**
-
-- `code` (integer(int32)) — Error code.
-- `details` (array[object]) — Error details.
-  - `typeUrl` (string) — URL type.
-  - `value` (string(byte)) — Error value.
-- `message` (string) — Error description.
-
-**Response 500:**
-
-- `code` (integer(int32)) — Error code.
-- `details` (array[object]) — Error details.
-  - `typeUrl` (string) — URL type.
-  - `value` (string(byte)) — Error value.
-- `message` (string) — Error description.
-
----
-
-### `POST /v1/seller-actions/update/ozon-card-discount`
-
-**Update special offer with "Increased discount with Ozon Bank card" mechanic**
-
-Operation ID: `SellerActionsUpdateOzonCardDiscount`
-
-You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1872-Novye-metody-dlia-raboty-s-aktsiiami-sellera/) in the Ozon for dev community.
-
-**Request body:**
-
-- `action_id` (integer(uint64)) — Special offer identifier. Get the parameter value using the [/v1/seller-actions/list](#operation/SellerActionsList) method.
-- `action_parameters` (object)
-  - `date_end` (string(date-time)) **(required)** — Date and time when the special offer ends.
-  - `date_start` (string(date-time)) **(required)** — Date and time when the special offer starts.
-  - `discount_value` (number(double)) **(required)** — Discount amount.
   - `title` (string) **(required)** — Special offer name.
 
 **Response 400:**
@@ -1852,6 +1895,405 @@ You can leave feedback on this method in the comments section to the [discussion
 - `file` (string) — Link to the CSV file with promo codes.
 
 **Response default:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+## Notification
+
+### `POST /v1/notification/set`
+
+**Connect URL for notifications**
+
+Operation ID: `SetNotification`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1978-Novye-beta-metody-dlia-upravleniia-podkliucheniiami-PUSH-uvedomlenii/) in the Ozon for dev community.
+
+**Request body:**
+
+- `types` (array[object]) **(required)** — Notification types:  - `TYPE_NEW_MESSAGE`: new message in the chat; - `TYPE_UPDATE_MESSAGE`: message in the chat is edited; - `TYPE_MESSAGE_READ`: cus
+- `url` (string) **(required)** — URL.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v1/notification/update`
+
+**Change URL for notifications**
+
+Operation ID: `UpdateNotification`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1978-Novye-beta-metody-dlia-upravleniia-podkliucheniiami-PUSH-uvedomlenii/) in the Ozon for dev community.
+
+**Request body:**
+
+- `id` (integer(int64)) **(required)** — URL identifier.
+- `types` (array[object]) — Notification types:  - `TYPE_NEW_MESSAGE`: new message in the chat; - `TYPE_UPDATE_MESSAGE`: message in the chat is edited; - `TYPE_MESSAGE_READ`: cus
+- `url` (string) — New URL.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v1/notification/delete`
+
+**Delete URL for notifications**
+
+Operation ID: `DeleteNotification`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1978-Novye-beta-metody-dlia-upravleniia-podkliucheniiami-PUSH-uvedomlenii/) in the Ozon for dev community.
+
+**Request body:**
+
+- `id` (integer(int64)) **(required)** — URL identifier.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v1/notification/check`
+
+**Check URL for notifications**
+
+Operation ID: `CheckNotification`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1978-Novye-beta-metody-dlia-upravleniia-podkliucheniiami-PUSH-uvedomlenii/) in the Ozon for dev community.
+
+**Request body:**
+
+- `url` (string) **(required)** — URL.
+
+**Response 200:**
+
+- `errors` (array[object]) — Verification errors.
+  - `description` (string) — Error description.
+  - `type` (enum) — Values: `REQUEST_ERROR, REQUEST_TIMEOUT, SERVER_FAULT, STATUS_CODE_NOT_OK, EMPTY_BODY, INVALID_BODY, INVALID_JSON, WRONG_RESULT_FIELD`
+- `is_active` (boolean) **(required)** — `true` if the URL is active.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v1/notification/enable`
+
+**Enable or disable URL for notifications**
+
+Operation ID: `EnableNotification`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1978-Novye-beta-metody-dlia-upravleniia-podkliucheniiami-PUSH-uvedomlenii/) in the Ozon for dev community.
+
+**Request body:**
+
+- `enabled` (boolean) **(required)** — Pass:  - `true`: to enable notifications; - `false`: to disable notifications.
+- `id` (integer(int64)) **(required)** — URL identifier.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v1/notification/list`
+
+**Get information about connected URLs**
+
+Operation ID: `NotificationList`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1978-Novye-beta-metody-dlia-upravleniia-podkliucheniiami-PUSH-uvedomlenii/) in the Ozon for dev community.
+
+**Response 200:**
+
+- `urls` (array[object]) **(required)** — Connected URLs.
+  - `created_at` (string(date-time)) **(required)** — URL connection date.
+  - `enable` (boolean) **(required)** — `true` if the URL is enabled.
+  - `id` (integer(int64)) **(required)** — URL identifier.
+  - `types` (array[object]) **(required)** — Notification types.
+  - `url` (string) **(required)** — URL.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v1/notification/push-type/list`
+
+**Get push notification types**
+
+Operation ID: `GetNotificationPushTypeList`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/1978-Novye-beta-metody-dlia-upravleniia-podkliucheniiami-PUSH-uvedomlenii/) in the Ozon for dev community.
+
+**Response 200:**
+
+- `types` (array[object]) **(required)** — Push notification types.
+  - `description` (string) **(required)** — Description.
+  - `seller_endpoint` (object)
+  - `type` (enum) **(required)** — Values: `TYPE_NEW_MESSAGE, TYPE_UPDATE_MESSAGE, TYPE_MESSAGE_READ, TYPE_CHAT_CLOSED, TYPE_NEW_POSTING, TYPE_POSTING_SHIPPED, TYPE_POSTING_CANCELLED, TYPE_STATE_CHANGED`
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
 
 - `code` (integer(int32)) — Error code.
 - `details` (array[object]) — Error details.
@@ -3394,6 +3836,84 @@ You can leave feedback on this method in the comments section to the [discussion
 - `last_id` (integer(int64)) — Identifier of the last order on the page.
 
 **Response default:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v1/posting/fbp/list`
+
+**Get shipment list**
+
+Operation ID: `PostingFbpList`
+
+You can leave feedback on this method in the comments section to the [discussion](https://dev.ozon.ru/community/2054-Novyi-beta-metod-dlia-raboty-s-FBP-postingami-v-Seller-API/ ) in the Ozon for dev community.
+
+**Request body:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `filter` (object)
+  - `name` (string) — Product name.
+  - `offer_id` (string) — Product identifier in the seller system.
+  - `posting_numbers` (array[string]) — Shipment numbers.
+  - `since` (string(date-time)) — Start date.
+  - `statuses` (array[string]) — Shipment status.
+  - `to` (string(date-time)) — End date.
+- `limit` (integer(int64)) — Number of values in the response.
+- `sort_by` (string) — Parameter by which shipments are sorted:  - `last_change_status_date`: date of the last status change; - `in_process_at`: processing start date.
+- `sort_dir` (enum) — Values: `ASC, DESC`
+
+**Response 200:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `postings` (array[object]) — Shipment list.
+  - `financial_data` (object)
+  - `in_process_at` (string(date-time)) — Start date and time of shipment processing.
+  - `order_date` (string(date-time)) — Order creation date.
+  - `order_id` (integer(int64)) — Order identifier to which the shipment belongs.
+  - `order_number` (string) — Order number to which the shipment belongs.
+  - `posting_number` (string) — Shipment number.
+  - `products` (array[object]) — List of products in the shipment.
+  - `provider_id` (integer(int64)) — Delivery service identifier.
+  - `status` (string) — Shipment status.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
 
 - `code` (integer(int32)) — Error code.
 - `details` (array[object]) — Error details.

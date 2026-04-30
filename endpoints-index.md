@@ -24,7 +24,7 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | Endpoint | Description | Operation ID |
 |----------|-------------|--------------|
 | `POST /v1/seller/info` | Get information about seller account | `SellerAPI_SellerInfo` |
-| `POST /v1/seller/ozon-logistics/info` | Get information about connecting to Ozon Logistics | `SellerAPI_SellerOzonLogisticsInfo` |
+| `POST /v1/seller/ozon-logistics/info` | Get information about connecting to Ozon Delivery | `SellerAPI_SellerOzonLogisticsInfo` |
 
 
 ### CategoryAPI
@@ -185,7 +185,9 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | Endpoint | Description | Operation ID |
 |----------|-------------|--------------|
 | `POST /v3/posting/fbs/unfulfilled/list` | List of unprocessed shipments | `PostingAPI_GetFbsPostingUnfulfilledList` |
+| `POST /v4/posting/fbs/unfulfilled/list` | Get list of unprocessed shipments | `PostingFbsUnfulfilledList` |
 | `POST /v3/posting/fbs/list` | Shipments list | `PostingAPI_GetFbsPostingListV3` |
+| `POST /v4/posting/fbs/list` | Get shipment list | `PostingFbsList` |
 | `POST /v3/posting/fbs/get` | Get shipment details by identifier (version 3) | `PostingAPI_GetFbsPostingV3` |
 | `POST /v2/posting/fbs/get-by-barcode` | Get shipment data by barcode | `PostingAPI_GetFbsPostingByBarcode` |
 | `POST /v3/posting/multiboxqty/set` | Specify number of boxes for multi-box shipments | `PostingAPI_PostingMultiBoxQtySetV3` |
@@ -220,6 +222,7 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | Endpoint | Description | Operation ID |
 |----------|-------------|--------------|
 | `POST /v2/posting/fbo/list` | Shipments list | `PostingAPI_GetFboPostingList` |
+| `POST /v3/posting/fbo/list` | Get shipment list | `PostingFboList` |
 | `POST /v2/posting/fbo/get` | Shipment details | `PostingAPI_GetFboPosting` |
 | `POST /v1/posting/fbo/cancel-reason/list` | Shipments cancellation reasons by FBO scheme | `PostingAPI_GetPostingFboCancelReasonList` |
 | `POST /v1/supply-order/status/counter` | Number of supply requests by status | `SupplyOrderAPI_SupplyOrderStatusCounter` |
@@ -472,6 +475,8 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | `POST /v2/actions/discounts-task/list` | Get list of discount requests | `GetDiscountTaskListV2` |
 | `POST /v2/cluster/list` | Get information about macrolocal clusters | `DraftClusterList` |
 | `POST /v1/description-category/tips` | Get tips to identify product category | `DescriptionCategoryTips` |
+| `POST /v1/product/visibility/set` | Set product visibility on Ozon and Ozon Select storefronts | `ProductVisibilitySet` |
+| `POST /v2/posting/digital/list` | Get shipment list | `PostingDigitalList` |
 
 
 ### Quants
@@ -517,13 +522,11 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | `POST /v1/seller-actions/create/discount-with-condition` | Create special offer with "Discount of order amount" mechanics | `SellerActionsCreateDiscountWithCondition` |
 | `POST /v1/seller-actions/create/installment` | Create special offer with "Interest-free installment" mechanics | `SellerActionsCreateInstallment` |
 | `POST /v1/seller-actions/create/multi-level-discount` | Create special offer with "Multi-level discount from the amount" mechanics | `SellerActionsCreateMultiLevelDiscount` |
-| `POST /v1/seller-actions/create/ozon-card-discount` | Create special offer with "Increased discount with Ozon Bank card" mechanics | `SellerActionsCreateOzonCardDiscount` |
 | `POST /v1/seller-actions/create/voucher` | Create special offer with "Discount by promo code" mechanics | `SellerActionsCreateVoucher` |
 | `POST /v1/seller-actions/update/discount` | Update special offer with "Discount" mechanic | `SellerActionsUpdateDiscount` |
 | `POST /v1/seller-actions/update/discount-with-condition` | Update special offer with "Discount of order amount" mechanic | `SellerActionsUpdateDiscountWithCondition` |
 | `POST /v1/seller-actions/update/installment` | Update special offer with "Interest-free installment" mechanic | `SellerActionsUpdateInstallment` |
 | `POST /v1/seller-actions/update/multi-level-discount` | Update special offer with "Multi-level discount from the total amount" mechanic | `SellerActionsUpdateMultiLevelDiscount` |
-| `POST /v1/seller-actions/update/ozon-card-discount` | Update special offer with "Increased discount with Ozon Bank card" mechanic | `SellerActionsUpdateOzonCardDiscount` |
 | `POST /v1/seller-actions/update/voucher` | Update special offer with "Discount by promo code" mechanic | `SellerActionsUpdateVoucher` |
 | `POST /v1/seller-actions/products/add` | Add products to special offer | `SellerActionsProductsAdd` |
 | `POST /v1/seller-actions/products/candidates` | Get list of products that can participate in special offer | `SellerActionsProductsCandidates` |
@@ -533,6 +536,19 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | `POST /v1/seller-actions/change-activity` | Enable or disable special offer | `SellerActionsChangeActivity` |
 | `POST /v1/seller-actions/list` | Get list of special offers | `SellerActionsList` |
 | `POST /v1/seller-actions/voucher/get` | Get file with promo codes in CSV format | `SellerActionsVoucherGet` |
+
+
+### Notification
+
+| Endpoint | Description | Operation ID |
+|----------|-------------|--------------|
+| `POST /v1/notification/set` | Connect URL for notifications | `SetNotification` |
+| `POST /v1/notification/update` | Change URL for notifications | `UpdateNotification` |
+| `POST /v1/notification/delete` | Delete URL for notifications | `DeleteNotification` |
+| `POST /v1/notification/check` | Check URL for notifications | `CheckNotification` |
+| `POST /v1/notification/enable` | Enable or disable URL for notifications | `EnableNotification` |
+| `POST /v1/notification/list` | Get information about connected URLs | `NotificationList` |
+| `POST /v1/notification/push-type/list` | Get push notification types | `GetNotificationPushTypeList` |
 
 
 ### DeliveryFBPDraft
@@ -626,6 +642,7 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | `POST /v1/fbp/label/get` | Get status of label generation task | `FbpAPI_FbpGetLabel` |
 | `POST /v1/fbp/order/get` | Get information about supply | `FbpAPI_FbpOrderGet` |
 | `POST /v1/fbp/order/list` | Get list of supplies | `FbpAPI_FbpOrderList` |
+| `POST /v1/posting/fbp/list` | Get shipment list | `PostingFbpList` |
 
 ## Premium Methods
 
@@ -645,7 +662,7 @@ Auth headers: `Client-Id` (seller ID) + `Api-Key` (API key)
 | `POST /v1/search-queries/top` | Get list of popular search queries | `SearchQueriesAPI_SearchQueriesTop` |
 | `POST /v1/product/prices/details` | Get details on product prices | `ProductPricesDetails` |
 
-## Ozon Logistics
+## Ozon Delivery
 
 
 ### CancelReasonAPI

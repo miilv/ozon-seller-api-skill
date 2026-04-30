@@ -5,7 +5,7 @@ description: Ozon Seller API reference and helper. Use when working with Ozon ma
 
 # Ozon Seller API
 
-You have access to the complete Ozon Seller API documentation (369 endpoints). Use it to help the user build integrations, write API calls, debug issues, and understand the Ozon marketplace API.
+You have access to the complete Ozon Seller API documentation (380 endpoints). Use it to help the user build integrations, write API calls, debug issues, and understand the Ozon marketplace API.
 
 ## Quick Reference
 
@@ -82,15 +82,15 @@ Introduction, Getting Started, Auth, OAuth, Environment, Process
 ### Premium Methods
 Extended chat, analytics, and finance methods (require Premium access)
 
-### Ozon Logistics
-Order management for Ozon Logistics: delivery check, map, checkout, orders, cancellations
+### Ozon Delivery
+Order management for Ozon Delivery: delivery check, map, checkout, orders, cancellations
 
 ### Push Notifications
-Webhook setup for real-time notifications: new postings, cancellations, status changes, stock updates, chat messages
+Webhook setup for real-time notifications: new postings, cancellations, status changes, stock updates, chat messages. Includes the **Notification API** for managing webhook URLs (set, update, enable/disable, list, check, delete) and listing supported push types.
 
 ## Documentation Files
 
-For the **complete endpoint index** with all 369 endpoints, see:
+For the **complete endpoint index** with all 380 endpoints, see:
 - [endpoints-index.md](endpoints-index.md) — quick lookup table of all endpoints
 
 For **detailed endpoint documentation** (request/response schemas, descriptions), see:
@@ -98,9 +98,9 @@ For **detailed endpoint documentation** (request/response schemas, descriptions)
 - [reference/basic_methods.md](reference/basic_methods.md) — all basic method endpoints (products, orders, warehouses, finance, etc.)
 - [reference/beta_methods.md](reference/beta_methods.md) — beta endpoints (reviews, Q&A, seller actions, FBP)
 - [reference/premium_methods.md](reference/premium_methods.md) — premium method endpoints
-- [reference/ozon_logistics.md](reference/ozon_logistics.md) — Ozon Logistics endpoints
+- [reference/ozon_delivery.md](reference/ozon_delivery.md) — Ozon Delivery endpoints
 - [reference/errors.md](reference/errors.md) — error codes and handling
-- [reference/push_notifications.md](reference/push_notifications.md) — push notification setup and types
+- [reference/push_notifications.md](reference/push_notifications.md) — push notification setup and Notification API
 
 For the **full OpenAPI spec** (Swagger 3.0), see:
 - [swagger.json](swagger.json) — complete machine-readable spec with all schemas

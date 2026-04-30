@@ -69,14 +69,14 @@ Operation ID: `SellerAPI_SellerInfo`
 
 ### `POST /v1/seller/ozon-logistics/info`
 
-**Get information about connecting to Ozon Logistics**
+**Get information about connecting to Ozon Delivery**
 
 Operation ID: `SellerAPI_SellerOzonLogisticsInfo`
 
 **Response 200:**
 
 - `available_schemas` (array[object]) — Available scheme type.
-- `ozon_logistics_enabled` (boolean) — `true` if Ozon Logistics is connected.
+- `ozon_logistics_enabled` (boolean) — `true` if Ozon Delivery is connected.
 
 **Response default:**
 
@@ -992,8 +992,6 @@ Method for getting information about the following limits:
 
 If you have a product range limit and you exceed it, you won't be able to create new products.
 
-**Request body:**
-
 **Response 200:**
 
 - `daily_create` (object)
@@ -1805,6 +1803,9 @@ If the request contains both the `offer_id` and `product_id` parameters, the cha
 
 Operation ID: `ProductAPI_ActionTimerUpdate`
 
+The minimum price is valid for 30 days after setting. 
+After that, the setting turns off. You can extend it: use the method again and specify `product_ids`.
+
 **Request body:**
 
 - `product_ids` (array[string]) — List of product identifiers.
@@ -2075,14 +2076,10 @@ Operation ID: `PromosCandidates`
 
 A method for getting a list of products that can participate in the special offer by the special offer identifier.
 
-> **Note:** 
-Starting May 5, 2025, the offset pagination parameter will be disabled. Switch to the last_id parameter.
-
 **Request body:**
 
 - `action_id` (number(double)) — Special offer identifier. You can get it using the [/v1/actions](#operation/Promos) method.
 - `limit` (number(double)) — Number of values in the response. The default value is 100.
-- `offset` (number(double)) — Number of elements to be skipped in the response. For example, if `offset = 10`, the response starts with the 11th element found.
 - `last_id` (number(double)) — Identifier of the last value on the page. Leave this field blank in the first request.
 
 **Response 200:**
@@ -2110,14 +2107,10 @@ Operation ID: `PromosProducts`
 
 A method for getting the list of products participating in the special offer by its identifier.
 
-> **Note:** 
-Starting May 5, 2025, the offset pagination parameter will be disabled. Switch to the last_id parameter.
-
 **Request body:**
 
 - `action_id` (number(double)) — Special offer identifier. You can get it using the [/v1/actions](#operation/Promos) method.
 - `limit` (number(double)) — Number of values in the response. The default value is 100.
-- `offset` (number(double)) — Number of elements to be skipped in the response. For example, if `offset = 10`, the response starts with the 11th element found.
 - `last_id` (number(double)) — Identifier of the last value on the page. Leave this field blank in the first request.
 
 **Response 200:**
@@ -2435,6 +2428,10 @@ Operation ID: `pricing_create`
 
 Operation ID: `pricing_info`
 
+**Request body:**
+
+- `strategy_id` (string) **(required)** — Strategy identifier.
+
 **Response 200:**
 
 - `result` (object)
@@ -2515,6 +2512,10 @@ Operation ID: `pricing_items-add`
 
 Operation ID: `pricing_ids`
 
+**Request body:**
+
+- `product_id` (array[string]) **(required)** — List of product identifiers. The maximum number is 50.
+
 **Response 200:**
 
 - `result` (object)
@@ -2535,6 +2536,10 @@ Operation ID: `pricing_ids`
 **List of products in a strategy**
 
 Operation ID: `pricing_items-list`
+
+**Request body:**
+
+- `strategy_id` (string) **(required)** — Strategy identifier.
 
 **Response 200:**
 
@@ -2589,6 +2594,10 @@ If you add a product to your pricing strategy, the method returns you the price 
 
 Operation ID: `pricing_items-delete`
 
+**Request body:**
+
+- `product_id` (array[string]) **(required)** — List of product identifiers. The maximum number is 50.
+
 **Response 200:**
 
 - `result` (object)
@@ -2636,6 +2645,10 @@ You can change the status of any strategy except the system one.
 Operation ID: `pricing_delete`
 
 You can delete any strategy except the system one.
+
+**Request body:**
+
+- `strategy_id` (string) **(required)** — Strategy identifier.
 
 **Response 200:**
 
@@ -3141,8 +3154,6 @@ Operation ID: `ProductStatusList`
 
 A method for getting a list of possible statuses of products when binding them to a certificate.
 
-**Request body:**
-
 **Response 200:**
 
 - `result` (array[object]) — Product statuses.
@@ -3222,8 +3233,6 @@ Operation ID: `CertificateUnbind`
 
 Operation ID: `RejectionReasonsList`
 
-**Request body:**
-
 **Response 200:**
 
 - `result` (array[object]) — Certificate rejection reasons.
@@ -3245,8 +3254,6 @@ Operation ID: `RejectionReasonsList`
 **Possible certificate statuses**
 
 Operation ID: `CertificateStatusList`
-
-**Request body:**
 
 **Response 200:**
 
@@ -4123,6 +4130,9 @@ To create a shipment, use the [/v1/warehouse/fbs/pickup/courier/create](#operati
 
 Operation ID: `PostingAPI_GetFbsPostingUnfulfilledList`
 
+> **Note:** 
+Method is deprecated and disabled on June 1, 2026. Switch to the new version [/v4/posting/fbs/unfulfilled/list](#operation/PostingFbsUnfulfilledList).
+
 Returns a list of unprocessed shipments for the specified time period: it shouldn't be longer than one year.
 
 Possible statuses:
@@ -4132,11 +4142,7 @@ Possible statuses:
 - `awaiting_packaging`—awaiting packaging,
 - `awaiting_deliver`—awaiting shipping,
 - `arbitration`—arbitration,
-- `client_arbitration`—customer delivery arbitration,
-- `delivering`—delivery is in progress,
-- `driver_pickup`—picked up by driver,
-- `cancelled`—canceled,
-- `not_accepted`—not accepted at the sorting center.
+- `client_arbitration`—customer delivery arbitratio...
 
 **Request body:**
 
@@ -4209,17 +4215,114 @@ Possible statuses:
 
 ---
 
+### `POST /v4/posting/fbs/unfulfilled/list`
+
+**Get list of unprocessed shipments**
+
+Operation ID: `PostingFbsUnfulfilledList`
+
+Returns a list of shipments for the specified time period. The period shouldn't be longer than one year. 
+
+Possible shipment statuses:
+- `awaiting registration`: awaiting registration; 
+- `acceptance_in_progress`: acceptance in progress;
+- `awaiting_approve`: awaiting approval;
+- `awaiting_packaging`: awaiting packaging;
+- `awaiting_deliver`: awaiting shipping;
+- `arbitration`: arbitration;
+- `client_arbitration`: customer delivery arbitration;
+- `delivering`: delivery in progress;
+- `driver_pickup`: picked up by driver;
+- `cancelled`: canceled; 
+- `not_accepted`: not accepted at the sorting c...
+
+**Request body:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `filter` (object)
+  - `cutoff_from` (string(date-time)) — Time before the order must be packed. Start date.
+  - `cutoff_to` (string(date-time)) — Time before the order must be packed. End date.
+  - `delivering_date_from` (string(date-time)) — Minimum date when shipment should be handed over for delivery.
+  - `delivering_date_to` (string(date-time)) — Maximum date when shipment should be handed over for delivery.
+  - `delivery_method_ids` (array[string]) — Delivery method identifier. You can get it using the [/v1/delivery-method/list](#operation/WarehouseAPI_DeliveryMethodList) method.
+  - `last_changed_status_date` (object)
+    - `from` (string(date-time)) — Start date of the period.
+    - `to` (string(date-time)) — End date of the period.
+  - `provider_ids` (array[string]) — Delivery service identifier. You can get it using the [/v1/delivery-method/list](#operation/WarehouseAPI_DeliveryMethodList) method.
+  - `statuses` (array[string]) — Shipment status:  - `acceptance_in_progress`: acceptance in progress; - `awaiting_approve`: awaiting approval; - `awaiting_packaging`: awaiting packag
+  - `warehouse_ids` (array[string]) — Warehouse identifier. You can get it using the [/v1/warehouse/list](#operation/WarehouseAPI_WarehouseList) method.
+- `limit` (integer(int64)) — Number of values in the response.
+- `sort_dir` (enum) — Values: `ASC, DESC`
+- `translit` (boolean) — `true` to enable the address transliteration from Cyrillic to Latin.
+- `with` (object)
+  - `analytics_data` (boolean) — `true` to add analytics data.
+  - `barcodes` (boolean) — `true` to add the shipment barcodes to the response.
+  - `financial_data` (boolean) — `true` to add financial data.
+  - `legal_info` (boolean) — `true` to add legal information.
+
+**Response 200:**
+
+- `count` (integer(int64)) — Number of shipments in the response.
+- `cursor` (string) — Cursor for the next data sample.
+- `has_next` (boolean) — `true` if the response doesn't contain all shipments.
+- `postings` (object) — Shipment list.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
 ### `POST /v3/posting/fbs/list`
 
 **Shipments list**
 
 Operation ID: `PostingAPI_GetFbsPostingListV3`
 
+> **Note:** 
+Method is deprecated and disabled on June 1, 2026. Switch to the new version [/v4/posting/fbs/list](#operation/PostingFbsList).
+
 Returns a list of shipments for the specified time period: it shouldn't be longer than one year.
 
 You can filter shipments by their status. The list of available statuses is specified in the description of the `filter.status` parameter.
 
-The `true` value of the `has_next` parameter in the response means there is not the entire array of shipments in the response. To get information on the remaining shipments, make a new request with a different `offset` value.
+The `true` value of the `has_next` parameter in the response means there is not the entire array of shipments in the response. To get information on the remaining shipments, make a new request with a different `offset` v...
 
 **Request body:**
 
@@ -4252,6 +4355,89 @@ The `true` value of the `has_next` parameter in the response means there is not 
 - `result` (object)
   - `has_next` (boolean) — Indicates that the response returned not the entire array of shipments: - `true`—make a new request with a different `offset` value to get information
   - `postings` (array[object]) — Shipment details.
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v4/posting/fbs/list`
+
+**Get shipment list**
+
+Operation ID: `PostingFbsList`
+
+Returns a list of shipments for the specified time period. The period shouldn't be longer than one year. 
+
+To get an up-to-date shipment date, update information about shipments regularly or enable [push notifications](#tag/push_start).
+
+**Request body:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `filter` (object) **(required)**
+  - `delivery_method_ids` (array[string]) — Delivery method identifier. You can get it using the [/v1/delivery-method/list](#operation/WarehouseAPI_DeliveryMethodList) method.
+  - `is_blr_traceable` (boolean) — `true` if the product is tracked.
+  - `last_changed_status_date` (object)
+    - `from` (string(date-time)) — Start date of the period.
+    - `to` (string(date-time)) — End date of the period.
+  - `order_id` (integer(int64)) — Order identifier.
+  - `order_numbers` (array[string]) — Order numbers to which the shipments belong.
+  - `provider_ids` (array[string]) — Delivery service identifier. You can get it using the [/v1/delivery-method/list](#operation/WarehouseAPI_DeliveryMethodList) method.
+  - `since` (string(date-time)) **(required)** — Start date of the period for which a list of shipments should be generated.
+  - `statuses` (array[string]) — Shipment status:  - `awaiting registration`: awaiting registration; - `acceptance_in_progress`: acceptance in progress; - `awaiting_approve`: awaiting
+  - `to` (string(date-time)) **(required)** — End date of the period for which a list of shipments should be generated.
+  - `warehouse_ids` (array[string]) — Warehouse identifier. You can get it using the [/v1/warehouse/list](#operation/WarehouseAPI_WarehouseList) method.
+- `limit` (integer(int64)) **(required)** — Number of values in the response.
+- `sort_dir` (enum) — Values: `ASC, DESC`
+- `translit` (boolean) — `true` to enable the address transliteration from Cyrillic to Latin.
+- `with` (object)
+  - `analytics_data` (boolean) — `true` to add analytics data.
+  - `barcodes` (boolean) — `true` to add the shipment barcodes to the response.
+  - `financial_data` (boolean) — `true` to add financial data.
+  - `legal_info` (boolean) — `true` to add legal information.
+
+**Response 200:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `has_next` (boolean) — `true` if the response doesn't contain all shipments.
+- `postings` (object) — Shipment list.
 
 **Response 400:**
 
@@ -4356,6 +4542,7 @@ Operation ID: `PostingAPI_GetFbsPostingV3`
   - `tpl_integration_type` (string) — Type of integration with the delivery service:  - `ozon`: delivery by the Ozon logistics;  - `aggregator`: delivery by a third-party service, Ozon reg
   - `tracking_number` (string) — Shipment tracking number.
   - `tariffication` (object)
+  - `tariffication_steps` (array[object]) — Shipping rate stages.
 
 **Response 400:**
 
@@ -5562,6 +5749,11 @@ Operation ID: `PolygonAPI_BindPolygon`
 
 Operation ID: `PostingAPI_GetFboPostingList`
 
+> **Note:** 
+Method is deprecated and disabled on June 1, 2026. Switch to the new version [/v3/posting/fbo/list](#operation/PostingFboList).
+
+ 
+
 Returns a list of shipments for a specified period of time. You can additionally filter the shipments by their status.
 
 **Request body:**
@@ -5595,6 +5787,97 @@ Returns a list of shipments for a specified period of time. You can additionally
   - `products` (array[object]) — Number of products in the shipment.
   - `status` (string) — Shipment status:   - `awaiting_packaging`—awaiting packaging,   - `awaiting_deliver`—awaiting shipping,   - `delivering`—delivery is in progress,   - 
   - `substatus` (string) — Shipment substatus: - `posting_split_pending`, `posting_created`: created; - `posting_packing`: packaging; - `posting_transferring_to_delivery`: hande
+
+**Response 400:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 403:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 404:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 409:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+**Response 500:**
+
+- `code` (integer(int32)) — Error code.
+- `details` (array[object]) — Error details.
+  - `typeUrl` (string) — URL type.
+  - `value` (string(byte)) — Error value.
+- `message` (string) — Error description.
+
+---
+
+### `POST /v3/posting/fbo/list`
+
+**Get shipment list**
+
+Operation ID: `PostingFboList`
+
+Returns a list of shipments for a specified period of time. 
+If the period is more than a year, you receive the `PERIOD_IS_TOO_LONG` error.
+
+You can additionally filter the shipments by their status.
+
+**Request body:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `filter` (object)
+  - `order_numbers` (array[string]) — Order numbers to which the shipments belong.
+  - `posting_numbers` (array[string]) — Shipment identifiers.
+  - `since` (string(date-time)) — Start date.
+  - `statuses` (array[string]) — Shipment status: - `awaiting_packaging`: awaiting packaging;  - `awaiting_deliver`: awaiting shipping;  - `delivering`: delivery in progress;  - `deli
+  - `to` (string(date-time)) — End date.
+- `limit` (integer(int64)) — Number of values in the response.
+- `sort_dir` (enum) — Values: `ASC, DESC`
+- `translit` (boolean) — `true` to enable the address transliteration from Cyrillic to Latin.
+- `with` (object)
+  - `analytics_data` (boolean) — `true` to add analytics data.
+  - `financial_data` (boolean) — `true` to add financial data.
+  - `legal_info` (boolean) — `true` to add legal information.
+
+**Response 200:**
+
+- `cursor` (string) — Cursor for the next data sample.
+- `has_next` (boolean) — `true` if the response doesn't contain all shipments.
+- `postings` (array[object]) — Shipment list.
+  - `additional_data` (array[object]) — Additional parameters.
+  - `analytics_data` (object)
+  - `cancel_reason_id` (integer(int64)) — Identifier of shipment cancellation reason.
+  - `cancellation` (object)
+  - `created_at` (string(date-time)) — Date and time of shipment creation.
+  - `external_order` (object)
+  - `financial_data` (object)
+  - `in_process_at` (string(date-time)) — Start date and time of shipment processing.
+  - `legal_info` (object)
+  - `order_id` (integer(int64)) — Order identifier to which the shipment belongs.
+  - `order_number` (string) — Order number to which the shipment belongs.
+  - `posting_number` (string) — Shipment number.
+  - `products` (array[object]) — List of products in the shipment.
+  - `status` (string) — Shipment status:  - `awaiting_packaging`: awaiting packaging;  - `awaiting_deliver`: awaiting shipping; - `delivering`: delivery in progress;  - `deli
+  - `substatus` (string) — Shipment substatus:  - `posting_split_pending`, `posting_created`: created; - `posting_packing`: packaging; - `posting_transferring_to_delivery`: hand
 
 **Response 400:**
 
@@ -11618,6 +11901,9 @@ Pass all digital product codes for each product in the order in a single request
 **Get shipments list**
 
 Operation ID: `ListPostingCodes`
+
+> **Note:** 
+Method is deprecated and will be disabled. Switch to the new version [/v2/posting/digital/list](#operation/PostingDigitalList).
 
 Returns a list of shipments for which digital product codes need to be uploaded. Method is available only to sellers working with digital products.
 

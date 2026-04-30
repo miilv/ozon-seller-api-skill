@@ -1,8 +1,8 @@
-# Ozon Logistics
+# Ozon Delivery
 
 ## OzonLogistics
 
-Methods in the Ozon Logistics section require an OAuth token in a private or public application.
+Methods in the Ozon Delivery section require an OAuth token in a private or public application.
 
 ## CancelReasonAPI
 

@@ -550,24 +550,28 @@ Message that Ozon sends:
 }
 ```
 
-| Parameter | Type     | Format    | Description                                                                                                                                     |
-|------------------------------------------|-----------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| `message_type`                           | string          | —         | Notification type: `TYPE_NEW_MESSAGE`.                                                                                                          |
-| `chat_id`                                | string          | —         | Chat identifier.                                                                                                                                |
+| Parameter | Type     | Format    | Description                                                                                                                                                                                                                                                                                                                                                                                                                            |
+|------------------------------------------|-----------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `message_type`                           | string          | —         | Notification type: `TYPE_NEW_MESSAGE`.                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `chat_id`                                | string          | —         | Chat identifier.                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `chat_type`                              | string          | —         | Chat type:
 • `Seller_Support`: support chat;
 • `Buyer_Seller`: chat with a customer;
-• `Seller_Notification`: notifications from Ozon. |
-| `message_id`                             | string          | —         | Message identifier.                                                                                                                             |
-| `created_at`                             | string          | date-time | Message creation date.                                                                                                                          |
-| `user`                                   | object          | —         | Information about message sender.                                                                                                               |
-| `id`                                     | string          | —         | Sender identifier.                                                                                                                              |
+• `Seller_Notification`: notifications from Ozon;
+• `Seller_API_Updates`: Seller API updates;
+• `Seller_API_Notifications`: Seller API notifications;
+• `Seller_Notification_Logistics`: Ozon Delivery notifications;
+• `Buyer_Seller_Select`: chat with a Select customer. |
+| `message_id`                             | string          | —         | Message identifier.                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `created_at`                             | string          | date-time | Message creation date.                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `user`                                   | object          | —         | Information about message sender.                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `id`                                     | string          | —         | Sender identifier.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `type`                                   | string          | —         | Sender type:
 • `Customer`: customer;
 • `Support`: support;
-• `NotificationUser`: Ozon.                                                 |
-| `data`                                   | array of string | —         | Array with message content in Markdown format.                                                                                                  |
-| `seller_id`                              | integer         | int64     | Seller identifier.                                                                                                                              |
+• `NotificationUser`: Ozon.                                                                                                                                                                                                                                                                                                                                        |
+| `data`                                   | array of string | —         | Array with message content in Markdown format.                                                                                                                                                                                                                                                                                                                                                                                         |
+| `seller_id`                              | integer         | int64     | Seller identifier.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 ## Message update
 
@@ -597,7 +601,11 @@ Message that Ozon sends:
 | `chat_type`                             | string          | —         | Chat type:
 • `Seller_Support`: support chat;
 • `Buyer_Seller`: chat with a customer;
-• `Seller_Notification`: notifications from Ozon. |
+• `Seller_Notification`: notifications from Ozon;
+• `Seller_API_Updates`: Seller API updates;
+• `Seller_API_Notifications`: Seller API notifications;
+• `Seller_Notification_Logistics`: Ozon Delivery notifications;
+• `Buyer_Seller_Select`: chat with a Select customer. |
 | `message_id`                            | string          | —         | Message identifier.                                                                                                                             |
 | `created_at`                            | string          | date-time | Message creation date.                                                                                                                          |
 | `updated_at`                            | string          | date-time | Message update date.                                                                                                                            |
@@ -628,24 +636,28 @@ Message that Ozon sends:
 }
 ```
 
-| Parameter | Type     | Format    | Description                                                                                                                                     |
-|-----------------------------------------|---------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| `message_type`                          | string  | —         | Notification type: `TYPE_MESSAGE_READ`.                                                                                                         |
-| `chat_id`                               | string  | —         | Chat identifier.                                                                                                                                |
+| Parameter | Type     | Format    | Description                                                                                                                                                                                                                                                                                                                                                                           |
+|-----------------------------------------|---------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `message_type`                          | string  | —         | Notification type: `TYPE_MESSAGE_READ`.                                                                                                                                                                                                                                                                                                                                               |
+| `chat_id`                               | string  | —         | Chat identifier.                                                                                                                                                                                                                                                                                                                                                                      |
 | `chat_type`                             | string  | —         | Chat type:
 • `Seller_Support`: support chat;
 • `Buyer_Seller`: chat with a customer;
-• `Seller_Notification`: notifications from Ozon. |
-| `message_id`                            | string  | —         | Message identifier.                                                                                                                             |
-| `created_at`                            | string  | date-time | Message creation date.                                                                                                                          |
-| `user`                                  | object  | —         | Information about the user who read the message.                                                                                                |
-| `id`                                    | string  | —         | User identifier.                                                                                                                                |
+• `Seller_Notification`: notifications from Ozon;
+• `Seller_API_Updates`: Seller API updates;
+• `Seller_API_Notifications`: Seller API notifications;
+• `Seller_Notification_Logistics`: Ozon Delivery notifications;
+• `Buyer_Seller_Select`: chat with a Select customer. |
+| `message_id`                            | string  | —         | Message identifier.                                                                                                                                                                                                                                                                                                                                                                   |
+| `created_at`                            | string  | date-time | Message creation date.                                                                                                                                                                                                                                                                                                                                                                |
+| `user`                                  | object  | —         | Information about the user who read the message.                                                                                                                                                                                                                                                                                                                                      |
+| `id`                                    | string  | —         | User identifier.                                                                                                                                                                                                                                                                                                                                                                      |
 | `type`                                  | string  | —         | User type:
 • `Customer`: customer;
 • `Support`: support;
-• `NotificationUser`: Ozon.                                                   |
-| `last_read_message_id`                  | string  | —         | Last read message identifier.                                                                                                                   |
-| `seller_id`                             | integer | int64     | Seller identifier.                                                                                                                              |
+• `NotificationUser`: Ozon.                                                                                                                                                                                                                                                                                         |
+| `last_read_message_id`                  | string  | —         | Last read message identifier.                                                                                                                                                                                                                                                                                                                                                         |
+| `seller_id`                             | integer | int64     | Seller identifier.                                                                                                                                                                                                                                                                                                                                                                    |
 
 ## Chat is closed
 
@@ -669,7 +681,11 @@ Message that Ozon sends:
 | `chat_type`                             | string  | —         | Chat type:
 • `Seller_Support`: support chat;
 • `Buyer_Seller`: chat with a customer;
-• `Seller_Notification`: notifications from Ozon. |
+• `Seller_Notification`: notifications from Ozon;
+• `Seller_API_Updates`: Seller API updates;
+• `Seller_API_Notifications`: Seller API notifications;
+• `Seller_Notification_Logistics`: Ozon Delivery notifications;
+• `Buyer_Seller_Select`: chat with a Select customer. |
 | `user`                                  | object  | —         | Information about the user who closed the chat.                                                                                                 |
 | `id`                                    | string  | —         | User identifier.                                                                                                                                |
 | `type`                                  | string  | —         | User type:
