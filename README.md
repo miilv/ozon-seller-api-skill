@@ -11,25 +11,25 @@ Clone this repository into the skills directory used by your agent.
 Claude Code personal skill:
 
 ```bash
-git clone https://github.com/miilg/ozon-seller-api-skill.git ~/.claude/skills/ozon-seller-api
+git clone https://github.com/miilv/ozon-seller-api-skill.git ~/.claude/skills/ozon-seller-api
 ```
 
 Claude Code project skill:
 
 ```bash
-git clone https://github.com/miilg/ozon-seller-api-skill.git .claude/skills/ozon-seller-api
+git clone https://github.com/miilv/ozon-seller-api-skill.git .claude/skills/ozon-seller-api
 ```
 
 Codex user skill:
 
 ```bash
-git clone https://github.com/miilg/ozon-seller-api-skill.git "${CODEX_HOME:-$HOME/.codex}/skills/ozon-seller-api"
+git clone https://github.com/miilv/ozon-seller-api-skill.git "${CODEX_HOME:-$HOME/.codex}/skills/ozon-seller-api"
 ```
 
 Codex repository-scoped skill:
 
 ```bash
-git clone https://github.com/miilg/ozon-seller-api-skill.git .agents/skills/ozon-seller-api
+git clone https://github.com/miilv/ozon-seller-api-skill.git .agents/skills/ozon-seller-api
 ```
 
 Restart or refresh your agent if it does not detect the new skill automatically.
